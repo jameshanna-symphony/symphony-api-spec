@@ -133,6 +133,40 @@ paths:
           $ref: '#/components/responses/ServerError'
         '501':
           $ref: '#/components/responses/NotImplemented'
+  /v5/users/organisations:
+    get:
+      tags:
+        - Users
+      summary: Retrieve authenticated user's personal chat organization structures
+      description: Retrieves directories, workspaces, and blast distribution lists for the authenticated user.
+      operationId: getUserOrganisations
+      parameters:
+        - name: sessionToken
+          in: header
+          required: true
+          schema:
+            type: string
+            description: Session authentication token.
+        - name: appId
+          in: query
+          required: false
+          description: Application ID to retrieve organizational structure for, defaults to symphonyPrime.
+          schema:
+            type: string
+            default: symphonyPrime
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrganisationsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/ServerError'
 
 components:
   responses:
@@ -388,3 +422,40 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Sort'
+    UserOrganisationsResponse:
+      type: object
+      description: Aggregated personal organization structures for the authenticated user.
+      properties:
+        directories:
+          type: array
+          description: Custom directories/folders of conversation streams.
+          items:
+            $ref: '#/components/schemas/OrganisationStructure'
+        workspaces:
+          type: array
+          description: Multi-chat workspaces.
+          items:
+            $ref: '#/components/schemas/OrganisationStructure'
+        blastLists:
+          type: array
+          description: Blast distribution lists.
+          items:
+            $ref: '#/components/schemas/OrganisationStructure'
+    OrganisationStructure:
+      type: object
+      required:
+        - id
+        - name
+        - streamIds
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the structure.
+        name:
+          type: string
+          description: Name of the structure.
+        streamIds:
+          type: array
+          description: Conversation stream IDs contained in this structure.
+          items:
+            type: string
