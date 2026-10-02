@@ -136,7 +136,7 @@ paths:
   /v5/users/organisations:
     get:
       tags:
-        - Users
+        - UserOrganisations
       summary: Retrieve authenticated user's personal chat organization structures
       description: Retrieves directories, workspaces, and blast distribution lists for the authenticated user.
       operationId: getUserOrganisations
