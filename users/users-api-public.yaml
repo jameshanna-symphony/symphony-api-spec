@@ -133,7 +133,7 @@ paths:
           $ref: '#/components/responses/ServerError'
         '501':
           $ref: '#/components/responses/NotImplemented'
-  /v5/users/organisations:
+  /v5/users/current/organisations:
     get:
       tags:
         - UserOrganisations
