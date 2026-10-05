@@ -440,7 +440,7 @@ components:
           type: array
           description: Blast distribution lists.
           items:
-            $ref: '#/components/schemas/OrganisationStructure'
+            $ref: '#/components/schemas/BlastList'
     OrganisationStructure:
       type: object
       required:
@@ -459,3 +459,33 @@ components:
           description: Conversation stream IDs contained in this structure.
           items:
             type: string
+    BlastList:
+      type: object
+      required:
+        - id
+        - name
+        - recipients
+      properties:
+        id:
+          type: string
+          description: Unique identifier of the blast distribution list.
+        name:
+          type: string
+          description: Name of the blast distribution list.
+        recipients:
+          type: array
+          description: Recipients of the blast list (users and streams).
+          items:
+            $ref: '#/components/schemas/BlastListRecipient'
+    BlastListRecipient:
+      type: object
+      required:
+        - id
+        - type
+      properties:
+        id:
+          type: string
+          description: Identifier of the recipient (user id or stream id).
+        type:
+          type: string
+          description: Recipient type, e.g. "user" or "stream".
