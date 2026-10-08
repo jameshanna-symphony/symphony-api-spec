@@ -432,18 +432,18 @@ components:
           type: array
           description: Custom folders of conversation streams.
           items:
-            $ref: '#/components/schemas/OrganisationStructure'
+            $ref: '#/components/schemas/ClientDataStructure'
         workspaces:
           type: array
           description: Multi-chat workspaces.
           items:
-            $ref: '#/components/schemas/OrganisationStructure'
+            $ref: '#/components/schemas/ClientDataStructure'
         distributionLists:
           type: array
           description: Distribution lists.
           items:
             $ref: '#/components/schemas/DistributionLists'
-    OrganisationStructure:
+    ClientDataStructure:
       type: object
       required:
         - id
