@@ -12,6 +12,8 @@ servers:
 tags:
   - name: App Users
     description: App users and entitlements API
+  - name: ClientData
+    description: Client data API
 paths:
   /v1/groups/sdl/{groupId}:
     get:
@@ -133,13 +135,13 @@ paths:
           $ref: '#/components/responses/ServerError'
         '501':
           $ref: '#/components/responses/NotImplemented'
-  /v5/users/current/organisations:
+  /v5/users/clientdata:
     get:
       tags:
-        - UserOrganisations
-      summary: Retrieve authenticated user's personal chat organization structures
-      description: Retrieves directories, workspaces, and blast distribution lists for the authenticated user.
-      operationId: getUserOrganisations
+        - ClientData
+      summary: Retrieve authenticated user's client data
+      description: Retrieves folders, workspaces, and distribution lists for the authenticated user.
+      operationId: getClientData
       parameters:
         - name: sessionToken
           in: header
@@ -150,7 +152,7 @@ paths:
         - name: appId
           in: query
           required: false
-          description: Application ID to retrieve organizational structure for, defaults to symphonyPrime.
+          description: Application ID to retrieve client data for, defaults to symphonyPrime.
           schema:
             type: string
             default: symphonyPrime
@@ -160,7 +162,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserOrganisationsResponse'
+                $ref: '#/components/schemas/ClientDataResponse'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -422,13 +424,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Sort'
-    UserOrganisationsResponse:
+    ClientDataResponse:
       type: object
-      description: Aggregated personal organization structures for the authenticated user.
+      description: Aggregated client data for the authenticated user.
       properties:
-        directories:
+        folders:
           type: array
-          description: Custom directories/folders of conversation streams.
+          description: Custom folders of conversation streams.
           items:
             $ref: '#/components/schemas/OrganisationStructure'
         workspaces:
@@ -436,11 +438,11 @@ components:
           description: Multi-chat workspaces.
           items:
             $ref: '#/components/schemas/OrganisationStructure'
-        blastLists:
+        distributionLists:
           type: array
-          description: Blast distribution lists.
+          description: Distribution lists.
           items:
-            $ref: '#/components/schemas/BlastList'
+            $ref: '#/components/schemas/DistributionLists'
     OrganisationStructure:
       type: object
       required:
@@ -459,7 +461,7 @@ components:
           description: Conversation stream IDs contained in this structure.
           items:
             type: string
-    BlastList:
+    DistributionLists:
       type: object
       required:
         - id
@@ -468,16 +470,16 @@ components:
       properties:
         id:
           type: string
-          description: Unique identifier of the blast distribution list.
+          description: Unique identifier of the distribution list.
         name:
           type: string
-          description: Name of the blast distribution list.
+          description: Name of the distribution list.
         recipients:
           type: array
-          description: Recipients of the blast list (users and streams).
+          description: Recipients of the distribution list (users and streams).
           items:
-            $ref: '#/components/schemas/BlastListRecipient'
-    BlastListRecipient:
+            $ref: '#/components/schemas/DistributionListRecipient'
+    DistributionListRecipient:
       type: object
       required:
         - id
@@ -485,7 +487,12 @@ components:
       properties:
         id:
           type: string
-          description: Identifier of the recipient (user id or stream id).
+          description: Identifier of the recipient (user id, stream id, or folder id).
         type:
           type: string
-          description: Recipient type, e.g. "user" or "stream".
+          description: Recipient type, e.g. "user", "stream", or "folder".
+        streamIds:
+          type: array
+          items:
+            type: string
+          description: List of stream IDs contained in the folder (populated when type is "folder").
